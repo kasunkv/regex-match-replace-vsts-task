@@ -4,14 +4,30 @@
   "description": "Visual Studio Team Services Task to replace file content with a regex match",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rimraf dist && npm run clean-js && npm run clean-map",
+    "clean-js": "rimraf BuildTask/**/*.js",
+    "clean-map": "rimraf BuildTask/**/*.map",
+    "lint": "tslint -c tslint.json BuildTask\\RegexMatchReplace\\**\\*.ts",
+    "compile": "npm run lint && tsc --project ./BuildTask",
+    "move-npm": "mkdirp dist/BuildTask/RegexMatchReplace && copyfiles \"./package.json\" dist/BuildTask/RegexMatchReplace",
+    "move-task": "copyfiles \"./BuildTask/RegexMatchReplace/**/!(*.ts)\" dist",
+    "restore-prod": "pushd \"dist/BuildTask/RegexMatchReplace\" && npm install --only=production && popd",
+    "build": "npm run move-npm && npm run restore-prod && npm run lint && npm run compile && npm run move-task",
+    "build-clean": "npm run clean && npm run build",
+    "publish-local": "tfx build tasks upload --task-path ./dist/BuildTask/RegexMatchReplace"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kasunkv/regex-match-replace-vsts-task.git"
   },
   "keywords": [
-    "regex"
+    "regex",
+    "regular-expressions",
+    "pattern-match",
+    "match",
+    "find-and-replace",
+    "replace",
+    "matching"
   ],
   "author": "Kasun Kodagoda",
   "license": "MIT",
@@ -24,6 +40,9 @@
   },
   "devDependencies": {
     "@types/node": "^8.0.47",
+    "@types/q": "^1.0.6",
+    "copyfiles": "^1.2.0",
+    "rimraf": "^2.6.2",
     "tslint": "^5.8.0",
     "tslint-eslint-rules": "^4.1.1",
     "tslint-microsoft-contrib": "^5.0.1",
