@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "regex-match-replace",
-    "name": "RegEx Match Replace",
+    "name": "RegEx Match & Replace",
     "publisher": "kasunkodagoda",
     "version": "0.0.0",
     "targets": [

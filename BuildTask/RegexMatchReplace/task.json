@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/AArnott/vso-agent-tasks/9b41d803a/tasks.schema.json",
     "id": "86e3367d-c1d2-40a3-ab67-abd1924ce49f",
     "name": "RegExMatchReplace",
-    "friendlyName": "RegEx Match Replace",
+    "friendlyName": "RegEx Match & Replace",
     "description": "Visual Studio Team Services Task to replace file content with a regex match",
     "helpMarkDown": "[More Information](https://github.com/kasunkv/regex-match-replace-vsts-task)",
     "category": "Utility",
@@ -58,7 +58,7 @@
             "helpMarkDown": "Enter the value to replace with the regex match."
         }
     ],
-    "instanceNameFormat": "RegEx Match Replace Task",
+    "instanceNameFormat": "RegEx Match & Replace",
     "execution": {
         "Node": {
             "target": "regexMatchReplace.js",
