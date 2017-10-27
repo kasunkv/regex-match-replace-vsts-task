@@ -1,0 +1,32 @@
+{
+  "name": "regex-match-replace-vsts-task",
+  "version": "0.0.0",
+  "description": "Visual Studio Team Services Task to replace file content with a regex match",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kasunkv/regex-match-replace-vsts-task.git"
+  },
+  "keywords": [
+    "regex"
+  ],
+  "author": "Kasun Kodagoda",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kasunkv/regex-match-replace-vsts-task/issues"
+  },
+  "homepage": "https://github.com/kasunkv/regex-match-replace-vsts-task#readme",
+  "dependencies": {
+    "vsts-task-lib": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.47",
+    "tslint": "^5.8.0",
+    "tslint-eslint-rules": "^4.1.1",
+    "tslint-microsoft-contrib": "^5.0.1",
+    "typescript": "^2.5.3"
+  }
+}
