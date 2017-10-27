@@ -1,6 +1,6 @@
 {
     "$schema": "https://raw.githubusercontent.com/AArnott/vso-agent-tasks/9b41d803a/tasks.schema.json",
-    "id": "9175fd51-4f41-459e-8c8d-b01e2b85bdcb",
+    "id": "86e3367d-c1d2-40a3-ab67-abd1924ce49f",
     "name": "RegExMatchReplace",
     "friendlyName": "RegEx Match Replace",
     "description": "Visual Studio Team Services Task to replace file content with a regex match",
