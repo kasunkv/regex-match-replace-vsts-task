@@ -15,13 +15,13 @@
     ],
     "screenshots": [
         {
-            "path": "screenshots/marketplace-icon.png"
+            "path": "screenshots/screenshot-0.png"
         },
         {
-            "path": "screenshots/marketplace-icon.png"
+            "path": "screenshots/screenshot-1.png"
         },
         {
-            "path": "screenshots/marketplace-icon.png"
+            "path": "screenshots/screenshot-2.png"
         }
     ],
     "galleryFlags": [
@@ -54,7 +54,7 @@
         }
     },
     "branding": {
-        "color": "rgb(26, 175, 93)",
+        "color": "rgb(74, 74, 74)",
         "theme": "dark"
     },
     "repository": {
