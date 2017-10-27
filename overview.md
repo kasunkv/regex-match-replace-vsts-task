@@ -1,7 +1,6 @@
 Visual Studio Team Services Task to replace file content with a regular expression match.
 
 ## Using RegEx Match & Replace Task
-
 Follow the instructions given below to add and configure RegEx Match & Replace Task in your build/release pipeline.
 
 ### Add the RegEx Match & Replace Task
@@ -9,12 +8,13 @@ Install the RegEx Match & Replace Task in to your Visual Studio Team Services ac
 
 ## Required Configuration
 RegEx Match & Replace Task has some required configuration options that needed to be provided.
-
 These configurations are found in the _**RegEx Match & Replace**_ section.
 
-![Required Configuration Options]()
+![Required Configuration Options](https://raw.githubusercontent.com/kasunkv/regex-match-replace-vsts-task/master/screenshots/screenshot-1.png)
 
 ### Required Options
 * **Path to File** : Select the file/files to replace content.
 * **Regular Expression to use** : Enter the regular expression. [RegEx Documentation]()
 * **Replacement value** : Enter the value to replace with the regex match.
+
+![Required Configuration Options Supplied](https://raw.githubusercontent.com/kasunkv/regex-match-replace-vsts-task/master/screenshots/screenshot-2.png)
