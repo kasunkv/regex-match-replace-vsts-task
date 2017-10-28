@@ -39,7 +39,7 @@
             "required": true,
             "defaultValue": "",
             "groupName": "regExMatch",
-            "helpMarkDown": "Select the file/files to replace content."
+            "helpMarkDown": "Select the file to run the Regular Expression search."
         },
         {
             "name": "RegEx",
@@ -47,7 +47,31 @@
             "label": "Regular Expression to use",
             "required": true,
             "groupName": "regExMatch",
-            "helpMarkDown": "Enter the regular expression."
+            "helpMarkDown": "Enter the regular expression without the modifiers. _(Eg. (?:\\d*\\.)?\\d+)_ Learn more about Regular Expressions from [Microsoft RegEx Quick Reference](https://docs.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) and test your Regular Expressions online using [RegExr](https://regexr.com/)"
+        },
+        {
+            "name": "Global",
+            "type": "boolean",
+            "label": "Global Match (g)",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Perform a global match _(Find all matches rather than stopping after the first match)_."
+        },
+        {
+            "name": "IgnoreCase",
+            "type": "boolean",
+            "label": "Ignore Case (i)",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Perform case-insensitive matching."
+        },
+        {
+            "name": "MultiLine",
+            "type": "boolean",
+            "label": "Multi Line (m)",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Perform multi-line matching."
         },
         {
             "name": "ValueToReplace",
