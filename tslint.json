@@ -49,7 +49,7 @@
         "no-arg": true,
         "no-bitwise": true,
         "no-conditional-assignment": true,
-        "no-console": [ true, "debug", "dir", "error", "group", "groupCollapsed", "groupEnd", "info", "profile", "profileEnd", "time", "timeEnd", "trace", "warn"/*, "log"*/ ],
+        "no-console": [ true, "debug", "dir", /*"error",*/ "group", "groupCollapsed", "groupEnd", /*"info",*/ "profile", "profileEnd", "time", "timeEnd", "trace", "warn"/*, "log"*/ ],
         "no-construct": true,
         "no-debugger": true,
         "no-duplicate-variable": true,
