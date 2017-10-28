@@ -12,15 +12,13 @@ async function run(): Promise<void> {
     const filePath: string = Task.getPathInput('PathToFile', true);
     const regExString: string = Task.getInput('RegEx', true);
     const valueToReplace: string = Task.getInput('ValueToReplace', true);
+    const global: boolean = Task.getBoolInput('Global');
+    const ignoreCase: boolean = Task.getBoolInput('IgnoreCase');
+    const multiLine: boolean = Task.getBoolInput('MultiLine');
 
-    //Task.debug(`File path: ${filePath}`);
     Helper.WriteConsoleInformation('File path: ', filePath);
-    //Task.debug(`Regular Expression: ${regExString}`);
     Helper.WriteConsoleInformation('Regular Expression: ', regExString);
-    //Task.debug(`Replacement Value: ${valueToReplace}`);
     Helper.WriteConsoleInformation('Replacement Value: ', valueToReplace);
-
-    //const regEx: RegExp = new RegExp(regExString, 'g');
 
     fs.readFile(filePath, 'utf8', (readError, data) => {
         if (readError) {
@@ -28,8 +26,8 @@ async function run(): Promise<void> {
             return;
         }
 
-        //const modifiedContent = data.replace(regEx, valueToReplace);
-        const modifiedContent = RegExMatch.MatchAndReplace(data, regExString, valueToReplace);
+        // Match and Replace
+        const modifiedContent = RegExMatch.MatchAndReplace(data, regExString, valueToReplace, global, ignoreCase, multiLine);
 
         fs.writeFile(filePath, modifiedContent, 'utf8', writeError => {
             if (writeError) {
