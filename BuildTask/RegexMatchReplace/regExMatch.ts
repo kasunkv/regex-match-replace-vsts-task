@@ -2,7 +2,7 @@
 export class RegExMatch {
     constructor() {}
 
-    static MatchAndReplace(content: string, expression: string, valueToReplace: string, global: boolean = true, ignoreCase: boolean = false, multiLine: boolean = false): string {
+    static MatchAndReplace(content: string, expression: string, valueToReplace: string, global: boolean, ignoreCase: boolean, multiLine: boolean): string {
         let regExModifier: string = '';
 
         // if any of the modifiers are not set, it defaults to global
