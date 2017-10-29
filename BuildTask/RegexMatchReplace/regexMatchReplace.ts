@@ -16,9 +16,9 @@ async function run(): Promise<void> {
     const ignoreCase: boolean = Task.getBoolInput('IgnoreCase');
     const multiLine: boolean = Task.getBoolInput('MultiLine');
 
-    Helper.WriteConsoleInformation('File path: ', filePath);
-    Helper.WriteConsoleInformation('Regular Expression: ', regExString);
-    Helper.WriteConsoleInformation('Replacement Value: ', valueToReplace);
+    Helper.WriteConsoleInformation(`File path: ${filePath}`, false);
+    Helper.WriteConsoleInformation(`Regular Expression: ${regExString}`, false);
+    Helper.WriteConsoleInformation(`Replacement Value: ${valueToReplace}`, false);
 
     fs.readFile(filePath, 'utf8', (readError, data) => {
         if (readError) {
