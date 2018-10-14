@@ -2,6 +2,7 @@
 import * as Task from 'vsts-task-lib';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as sentry from '@sentry/node';
 
 import { Helper } from './helper';
 import { RegExMatch } from './regExMatch';
@@ -9,6 +10,12 @@ import { RegExMatch } from './regExMatch';
 Task.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function run(): Promise<void> {
+
+    sentry.init({
+        dsn: 'SENTRY_DSN',
+        release: 'TASK_RELEASE_VERSION'
+    });
+
     const filePath: string = Task.getPathInput('PathToFile', true);
     const regExString: string = Task.getInput('RegEx', true);
     const valueToReplace: string = Task.getInput('ValueToReplace', true);
@@ -32,6 +39,7 @@ async function run(): Promise<void> {
         fs.writeFile(filePath, modifiedContent, 'utf8', writeError => {
             if (writeError) {
                 Task.setResult(Task.TaskResult.Failed, `Failed to write the file. Error: ${writeError.message}`);
+                sentry.captureException(writeError);
                 return;
             }
 
@@ -41,4 +49,7 @@ async function run(): Promise<void> {
 
 }
 
-run();
+run()
+    .catch((err: any) => {
+        sentry.captureException(err);
+    });

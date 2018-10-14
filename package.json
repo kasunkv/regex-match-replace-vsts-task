@@ -36,6 +36,7 @@
   },
   "homepage": "https://github.com/kasunkv/regex-match-replace-vsts-task#readme",
   "dependencies": {
+    "@sentry/node": "^4.1.1",
     "vsts-task-lib": "^2.1.0"
   },
   "devDependencies": {
