@@ -1,55 +1,86 @@
+import * as Task from "vsts-task-lib";
+import * as path from "path";
+import * as fs from "fs";
+import * as sentry from "@sentry/node";
+import { glob } from "glob";
 
-import * as Task from 'vsts-task-lib';
-import * as path from 'path';
-import * as fs from 'fs';
-import * as sentry from '@sentry/node';
+import { Helper } from "./helper";
+import { RegExMatch } from "./regExMatch";
 
-import { Helper } from './helper';
-import { RegExMatch } from './regExMatch';
-
-Task.setResourcePath(path.join(__dirname, 'task.json'));
+Task.setResourcePath(path.join(__dirname, "task.json"));
 
 async function run(): Promise<void> {
+  sentry.init({
+    dsn: "SENTRY_DSN",
+    release: "TASK_RELEASE_VERSION",
+  });
 
-    sentry.init({
-        dsn: 'SENTRY_DSN',
-        release: 'TASK_RELEASE_VERSION'
-    });
+  const filePath: string = Task.getPathInput("PathToFile", true);
+  const regExString: string = Task.getInput("RegEx", true);
+  const valueToReplace: string = Task.getInput("ValueToReplace", true);
+  const global: boolean = Task.getBoolInput("Global");
+  const ignoreCase: boolean = Task.getBoolInput("IgnoreCase");
+  const multiLine: boolean = Task.getBoolInput("MultiLine");
+  const workingDirectory: string = Task.getInput("WorkingDirectory");
 
-    const filePath: string = Task.getPathInput('PathToFile', true);
-    const regExString: string = Task.getInput('RegEx', true);
-    const valueToReplace: string = Task.getInput('ValueToReplace', true);
-    const global: boolean = Task.getBoolInput('Global');
-    const ignoreCase: boolean = Task.getBoolInput('IgnoreCase');
-    const multiLine: boolean = Task.getBoolInput('MultiLine');
-
-    Helper.WriteConsoleInformation(`File path: ${filePath}`, false);
-    Helper.WriteConsoleInformation(`Regular Expression: ${regExString}`, false);
-    Helper.WriteConsoleInformation(`Replacement Value: ${valueToReplace}`, false);
-
-    fs.readFile(filePath, 'utf8', (readError, data) => {
-        if (readError) {
-            Task.setResult(Task.TaskResult.Failed, `Failed to read the file. File path: ${filePath}`);
-            return;
-        }
-
-        // Match and Replace
-        const modifiedContent = RegExMatch.MatchAndReplace(data, regExString, valueToReplace, global, ignoreCase, multiLine);
-
-        fs.writeFile(filePath, modifiedContent, 'utf8', writeError => {
-            if (writeError) {
-                Task.setResult(Task.TaskResult.Failed, `Failed to write the file. Error: ${writeError.message}`);
-                sentry.captureException(writeError);
-                return;
+  Helper.WriteConsoleInformation(`File path: ${filePath}`, false);
+  Helper.WriteConsoleInformation(`Regular Expression: ${regExString}`, false);
+  Helper.WriteConsoleInformation(`Replacement Value: ${valueToReplace}`, false);
+  glob(filePath, {
+    cwd: workingDirectory
+  }, (globError, files) => {
+    if (globError) {
+      Task.setResult(
+        Task.TaskResult.Failed,
+        `Something went wrong with your filepath pattern. File path: ${filePath}`
+      );
+      return;
+    }
+    if (files.length > 0) {
+      const operations = files.map((file) => {
+        return () => new Promise<void>((resolve, reject) => {
+          fs.readFile(file, "utf8", (readError, data) => {
+            if (readError) {
+              reject(readError);
+              return;
             }
+            // Match and Replace
+            const modifiedContent = RegExMatch.MatchAndReplace(
+              data,
+              regExString,
+              valueToReplace,
+              global,
+              ignoreCase,
+              multiLine
+            );
 
-            Task.setResult(Task.TaskResult.Succeeded, 'RegEx Match Replace Complete.');
+            fs.writeFile(file, modifiedContent, "utf8", (writeError) => {
+              if (writeError) {
+                sentry.captureException(writeError);
+                reject(writeError);
+                return;
+              }
+              resolve();
+            });
+          });
         });
-    });
-
+      });
+      operations.forEach(async (operation) => {
+        try {
+          await operation();
+        } catch(ex) {
+          console.error(ex);
+        }
+      })
+    } else {
+      Task.setResult(
+        Task.TaskResult.SucceededWithIssues,
+        `No files have been modified. File path: ${filePath}`
+      );
+    }
+  });
 }
 
-run()
-    .catch((err: any) => {
-        sentry.captureException(err);
-    });
+run().catch((err: any) => {
+  sentry.captureException(err);
+});
