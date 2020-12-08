@@ -21,64 +21,71 @@ async function run(): Promise<void> {
   const global: boolean = Task.getBoolInput("Global");
   const ignoreCase: boolean = Task.getBoolInput("IgnoreCase");
   const multiLine: boolean = Task.getBoolInput("MultiLine");
-  const workingDirectory: string = Task.getInput("WorkingDirectory");
+  const workingDirectory: string = Task.getPathInput("WorkingDirectory");
 
   Helper.WriteConsoleInformation(`File path: ${filePath}`, false);
   Helper.WriteConsoleInformation(`Regular Expression: ${regExString}`, false);
   Helper.WriteConsoleInformation(`Replacement Value: ${valueToReplace}`, false);
-  glob(filePath, {
-    cwd: workingDirectory
-  }, (globError, files) => {
-    if (globError) {
-      Task.setResult(
-        Task.TaskResult.Failed,
-        `Something went wrong with your filepath pattern. File path: ${filePath}`
-      );
-      return;
-    }
-    if (files.length > 0) {
-      const operations = files.map((file) => {
-        return () => new Promise<void>((resolve, reject) => {
-          fs.readFile(file, "utf8", (readError, data) => {
-            if (readError) {
-              reject(readError);
-              return;
-            }
-            // Match and Replace
-            const modifiedContent = RegExMatch.MatchAndReplace(
-              data,
-              regExString,
-              valueToReplace,
-              global,
-              ignoreCase,
-              multiLine
-            );
+  glob(
+    filePath,
+    {
+      cwd: workingDirectory === '' ? undefined : workingDirectory,
+    },
+    (globError, files) => {
+      if (globError) {
+        Task.setResult(
+          Task.TaskResult.Failed,
+          `Something went wrong with your filepath pattern. File path: ${filePath}`
+        );
+        return;
+      }
+      if (files.length > 0) {
+        const operations = files.map((file) => {
+          console.log(`File has been found: ${file}`);
+          return () =>
+            new Promise<string>((resolve, reject) => {
+              fs.readFile(file, "utf8", (readError, data) => {
+                if (readError) {
+                  reject(readError);
+                  return;
+                }
+                // Match and Replace
+                const modifiedContent = RegExMatch.MatchAndReplace(
+                  data,
+                  regExString,
+                  valueToReplace,
+                  global,
+                  ignoreCase,
+                  multiLine
+                );
 
-            fs.writeFile(file, modifiedContent, "utf8", (writeError) => {
-              if (writeError) {
-                sentry.captureException(writeError);
-                reject(writeError);
-                return;
-              }
-              resolve();
+                fs.writeFile(file, modifiedContent, "utf8", (writeError) => {
+                  if (writeError) {
+                    sentry.captureException(writeError);
+                    reject(writeError);
+                    return;
+                  }
+                  resolve(file);
+                });
+              });
             });
-          });
         });
-      });
-      operations.forEach(async (operation) => {
-        try {
-          await operation();
-        } catch(ex) {
-          console.error(ex);
-        }
-      })
-    } else {
-      Task.setResult(
-        Task.TaskResult.SucceededWithIssues,
-        `No files have been modified. File path: ${filePath}`
-      );
+        operations.forEach(async (operation) => {
+          try {
+            const file = await operation();
+            console.log(`File has been modified: ${file}`);
+          } catch (ex) {
+            console.error(ex);
+          }
+        });
+      } else {
+        Task.setResult(
+          Task.TaskResult.SucceededWithIssues,
+          `No files have been modified. File path: ${filePath}`
+        );
+      }
     }
-  });
+  );
 }
 
 run().catch((err: any) => {
