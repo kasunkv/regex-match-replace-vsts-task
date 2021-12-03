@@ -85,7 +85,7 @@
     ],
     "instanceNameFormat": "RegEx Match & Replace",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "regexMatchReplace.js",
             "argumentFormat": ""
         }
